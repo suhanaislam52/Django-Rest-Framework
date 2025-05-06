@@ -5,6 +5,8 @@ from rest_framework.response import Response
 from .models import *
 from .serializers import *
 from .serializers import StudentSerializer  # Import the serializer specifically
+from .serializers import BookSerializer
+
 
 
 @api_view(['GET'])
@@ -61,3 +63,9 @@ def delete_student(request , id):
     except Exception as e:
         print(e)
         return Response({'status':403,'message':'invalid id'})
+    
+@api_view(['GET'])
+def get_book(request):
+    book_objs=Book.objects.all()
+    serializer=BookSerializer(book_objs,many=True)
+    return Response({'status':200,'payload':serializer.data})
