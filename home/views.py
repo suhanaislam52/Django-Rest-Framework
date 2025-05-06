@@ -74,8 +74,13 @@ def get_book(request):
 
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 class StudentAPI(APIView):
+    authentication_classes=[JWTAuthentication]
+    permission_classes=[IsAuthenticated]
+
+
     def get(self,request):
         student_objs=Student.objects.all()
         serializer=StudentSerializer(student_objs, many=True)
@@ -128,6 +133,7 @@ class StudentAPI(APIView):
            print(e)
            return Response({'status':403,'message':'invalid id'})
      
+from rest_framework_simplejwt.tokens import RefreshToken
 class RegisterUser(APIView):
    def post(self,request):
       serializer=UserSerializer(data=request.data)
@@ -137,5 +143,5 @@ class RegisterUser(APIView):
       serializer.save()
 
       user=User.objects.get(username=serializer.data['username'])
-      token_obj ,= Token.objects.get_or_create(user=user)
-      return Response({'status':200,'payload':serializer.data,'message':'your data has been saved'})
+      refresh=RefreshToken.for_user(user)
+      return Response({'status':200,'payload':serializer.data,'refresh':str(refresh),'access':str(refresh.access_token),'message':'your data has been saved'})
