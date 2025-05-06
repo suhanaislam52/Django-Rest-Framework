@@ -10,5 +10,7 @@ urlpatterns = [
    #path('update-student/<id>/',update_student),
    path('get-book/',get_book),
    path('student/',StudentAPI.as_view()),
-   path('register/',RegisterUser.as_view())
+   path('register/',RegisterUser.as_view()),
+   path('generic-student/',StudentGeneric.as_view()),
+   path('generic-student/<id>',StudentGeneric1.as_view())
 ]
