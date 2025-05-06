@@ -13,3 +13,6 @@ class Category(models.Model):
 class Book(models.Model):
     category=models.ForeignKey(Category,on_delete=models.CASCADE)
     book_title=models.CharField(max_length=100)
+
+class ExcelFileUpload(models.Model):
+    excel_file_upload=models.FileField(upload_to="excel")

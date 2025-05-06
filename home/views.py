@@ -157,3 +157,31 @@ class StudentGeneric1(generics.UpdateAPIView,generics.DestroyAPIView):
    queryset=Student.objects.all()
    serializer_class=StudentSerializer
    lookup_field='id'
+
+import pandas as pd 
+from django.conf import Settings
+import uuid
+class ExportImportExcel(APIView):
+   def get(self,request):
+      student_objs=Student.objects.all()
+      serializer=StudentSerializer(student_objs,many=True)
+      df=pd.DataFrame(serializer.data)
+      print(df)
+
+      df.to_csv(f"public/static/excel/{uuid.uuid4()}.csv",encoding="UTF-8",ondex=False)
+
+      return Response({'status':200})
+   
+   def post(self, request):
+    exceled_upload_obj = ExcelFileUpload.objects.create(excel_file_upload=request.FILES['files'])
+    df = pd.read_csv(f"{settings.BASE_DIR}/public/static/{exceled_upload_obj.excel_file_upload}")
+    
+    for student in df.values.tolist():
+        Student.objects.create(
+            name=student[1],
+            age=student[3]
+        )
+        print(student)
+        
+    return Response({'status': 200})
+
