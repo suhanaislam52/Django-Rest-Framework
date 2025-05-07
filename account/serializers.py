@@ -12,4 +12,4 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password=(validated_data['password'])
         user.save()
         send_otp_to_mobile(user.phone,user)
-        return user
+        return user 
